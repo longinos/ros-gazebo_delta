@@ -1,0 +1,253 @@
+<?xml version="1.0" ?>
+<!-- 
+ This is a standalone URDF model of 2WD smart car robot 
+ -->
+
+
+
+
+<robot name="delta_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+  
+  <xacro:include filename="$(find delta_robot_description)/urdf/delta.gazebo.xacro"/>
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="M_PI_2" value="1.570796327" />
+  <xacro:property name="DEG_TO_RAD" value="0.017453293" />
+
+ <!-- <xacro:macro name="mobile_robot">   -->
+
+    <link name="base_footprint"/>
+    <!--
+       Base link is set at the bottom of the base mould.
+       This is done to be compatible with the way base link
+       was configured for turtlebot 1. Refer to
+       
+       https://github.com/turtlebot/turtlebot/issues/40
+       
+       To put the base link at the more oft used wheel
+       axis, set the z-distance from the base_footprint
+       to 0.352.
+      -->
+    <joint name="base_joint" type="fixed">
+      <origin xyz="0 0 0.024" rpy="0 0 0" />
+      <parent link="base_footprint"/>
+      <child link="base_link" />
+    </joint>
+
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <!-- new mesh -->
+          <mesh filename="package://delta_robot_description/meshes/body/base.dae" scale="0.001 0.001 0.001"/> 
+        </geometry>
+	 	<origin xyz="0 0 0" rpy=" 0 0 0 "/>
+      </visual>
+
+    <collision>
+        <geometry>
+		<mesh filename="package://delta_robot_description/meshes/body/base.dae" scale="0.001 0.001 0.001"/> 
+        </geometry>
+	 	<origin xyz="0 0 0" rpy=" 0 0 0 "/>
+	</collision> 
+
+      <inertial>
+        <!-- COM experimentally determined -->
+        <origin xyz="0 0 0"/>
+        <mass value="2.4"/> <!-- 2.4/2.6 kg for small/big battery pack -->
+ 
+        <inertia ixx="0.019995" ixy="0.0" ixz="0.0"
+                 iyy="0.019995" iyz="0.0" 
+                 izz="0.03675" />
+      </inertial>
+    </link>
+
+<!-- superior base -->
+
+    <joint name="top_base_joint" type="fixed">
+      <origin xyz="0 0 0.074" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="top_base_link" />
+    </joint>
+
+    <link name="top_base_link">
+      <visual>
+        <geometry>
+          <!-- new mesh -->
+          <mesh filename="package://delta_robot_description/meshes/body/base.dae" scale="0.001 0.001 0.001"/> 
+        </geometry>
+	 	<origin xyz="0 0 0" rpy=" 0 0 0 "/>
+      </visual>
+
+    <collision>
+        <geometry>
+		<mesh filename="package://delta_robot_description/meshes/body/base.dae" scale="0.001 0.001 0.001"/> 
+        </geometry>
+	 	<origin xyz="0 0 0" rpy=" 0 0 0 "/>
+	</collision> 
+
+      <inertial>
+        <!-- COM experimentally determined -->
+        <origin xyz="0 0 0"/>
+        <mass value="2.4"/> <!-- 2.4/2.6 kg for small/big battery pack -->
+ 
+        <inertia ixx="0.019995" ixy="0.0" ixz="0.0"
+                 iyy="0.019995" iyz="0.0" 
+                 izz="0.03675" />
+      </inertial>
+    </link>
+
+<!-- Wheel and caster wheel link  -->
+
+
+        <!-- NOTE This may prevent gazebo from working with this model -->
+	  <joint name="front_wheel_joint" type="fixed">
+	    <origin xyz="0.123 0 -0.024" rpy="0 0 0"/>
+	    <parent link="base_link"/>
+	    <child link="front_wheel_link"/>
+	    <axis xyz="1 0 0"/>
+
+      	    <limit effort="100" velocity="100"/>
+            <joint_properties damping="0.0" friction="0.0"/>
+
+	  </joint>
+	
+	  <link name="front_wheel_link">
+	    <inertial>
+	      <origin xyz="0 0 0"/>
+	      <mass value="0.01" />
+	      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+	        iyy="0.001" iyz="0.0" izz="0.001" />
+	    </inertial>
+	
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/> 
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> --> 
+	      </geometry>
+         	 <material name ="black" />
+	    </visual>
+	
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/>
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> -->
+	      </geometry>
+	    </collision>
+	  </link>
+
+
+
+
+	  <link name="right_wheel_link">
+	    <inertial>
+	      <origin xyz="0 0 0"/>
+	      <mass value="0.01" />
+	      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+	        iyy="0.001" iyz="0.0" izz="0.001" />
+	    </inertial>
+	
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/>
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> -->
+	      </geometry>
+          	<material name ="black" />
+	    </visual>
+	
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/>
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> --> 
+	      </geometry>
+	    </collision>
+	  </link>
+	
+        <!-- Fixed because we never rotate it anyway, it is just for show -->
+        <!-- NOTE This may prevent gazebo from working with this model -->
+	  <joint name="right_wheel_joint" type="fixed">
+	    <origin xyz="-0.055 -0.102 -0.024" rpy="0 0 ${DEG_TO_RAD*-120}"/>
+	    <parent link="base_link"/>
+	    <child link="right_wheel_link"/>
+	    <axis xyz="1 0 0"/>
+	  </joint>
+	
+
+<!--   
+    <joint name="caster_front_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="chefbot_caster_front_link"/>
+      <origin xyz="0.115 0.0 0.007" rpy="${-M_PI/2} 0 0"/>
+    </joint>
+
+
+    <link name="chefbot_caster_front_link">
+      <collision>
+        <geometry>
+          <cylinder length="0.0176" radius="0.017"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+      </collision>      
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" 
+                 izz="0.001" />
+      </inertial>
+    </link>
+-->    
+
+    <joint name="left_wheel_joint" type="fixed">
+	    <parent link="base_link"/>
+    	<child link="left_wheel_link"/>
+    	<origin xyz="-0.055 0.102 -0.024" rpy="0 0 ${DEG_TO_RAD*120}"/>
+    	<axis xyz="1 0 0"/>
+
+    </joint>
+
+
+    <link name="left_wheel_link">
+	    <inertial>
+	      <origin xyz="0 0 0"/>
+	      <mass value="0.01" />
+	      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+	        iyy="0.001" iyz="0.0" 
+          izz="0.001" />
+	    </inertial>
+	
+	    <visual>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/>
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> --> 
+	      </geometry>
+          	<material name ="black" />
+	    </visual>
+	
+	    <collision>
+	      <origin xyz="0 0 0" rpy="0 ${DEG_TO_RAD*90} 0" />
+	      <geometry>
+		  <cylinder radius="0.024" length = "0.02"/>
+		  <!-- <mesh filename="package://delta_robot_description/meshes/wheels/Omnidirectional.dae" scale="0.001 0.001 0.001"/> --> 
+	      </geometry>
+	    </collision>
+	  </link>
+
+
+<!--  </xacro:macro> -->
+
+      <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+          <robotNamespace>/robot1</robotNamespace>
+        </plugin>
+      </gazebo>
+	     <gazebo reference="base_link">
+       <material>Gazebo/Red</material>
+     </gazebo>
+	<xacro:omni_steering/>
+</robot> 
+
